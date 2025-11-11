@@ -10,8 +10,51 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 0) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_10_235248) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "cards", force: :cascade do |t|
+    t.bigint "game_session_id", null: false
+    t.bigint "player_id", null: false
+    t.boolean "is_split", default: false
+    t.boolean "in_discard", default: false
+    t.boolean "in_deck", default: false
+    t.boolean "is_ace", default: false
+    t.string "card_symbol"
+    t.integer "value"
+    t.index ["game_session_id"], name: "index_cards_on_game_session_id"
+    t.index ["player_id"], name: "index_cards_on_player_id"
+  end
+
+  create_table "game_sessions", force: :cascade do |t|
+    t.string "session_id"
+    t.integer "player_turn"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "players", force: :cascade do |t|
+    t.bigint "game_session_id", null: false
+    t.integer "money"
+    t.integer "current_bet", default: 0
+    t.string "name"
+    t.integer "order"
+    t.boolean "insurance", default: false
+    t.boolean "double_down", default: false
+    t.boolean "is_ai"
+    t.index ["game_session_id"], name: "index_players_on_game_session_id"
+  end
+
+  create_table "settings", force: :cascade do |t|
+    t.string "session_id"
+    t.integer "starting_money"
+    t.integer "pc_count", default: 1
+    t.integer "total_players", default: 1
+    t.integer "deck_count", default: 1
+  end
+
+  add_foreign_key "cards", "game_sessions"
+  add_foreign_key "cards", "players"
+  add_foreign_key "players", "game_sessions"
 end
