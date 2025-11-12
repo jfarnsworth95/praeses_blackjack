@@ -5,6 +5,7 @@ class GameSessionsController < ApplicationController
   before_action :check_phase_mismatch, except: [:start_game]
 
   CAUSE_NATURALS = 0
+  CAUSE_INSURANCE_NATURAL = 1
 
   # Delete old games if session has some still kicking around
   def before_start_game
@@ -26,9 +27,9 @@ class GameSessionsController < ApplicationController
 
     case @game_session.phase
     when GameSession::PHASE_BETTING
-      ["betting_phase", "submit_bet"].include? param_to_phase ? nil : redirect_to( action: "betting_phase")
+      ["betting_phase", "submit_bet"].include?(param_to_phase) ? nil : redirect_to( action: "betting_phase")
     when GameSession::PHASE_INSURANCE
-      param_to_phase == "insurance_phase" ? nil : redirect_to( action: "insurance_phase")
+      ["insurance_phase", "insurance_response"].include?(param_to_phase) ? nil : redirect_to( action: "insurance_phase")
     when GameSession::PHASE_PLAY
       param_to_phase == "play_phase" ? nil : redirect_to( action: "play_phase")
     when GameSession::PHASE_RESOLVE
@@ -54,7 +55,6 @@ class GameSessionsController < ApplicationController
       redirect_to action: "betting_phase"
     end
     if @current_player.is_ai
-      puts "******************* #{@current_player.name} is going *************************"
       ai_bet()
       return
     end
@@ -62,7 +62,7 @@ class GameSessionsController < ApplicationController
 
   def submit_bet
     # Verify player can afford bet
-    if @current_player.money >= params[:player][:current_bet].to_i 
+    if @current_player.can_bet?(params[:player][:current_bet].to_i )
 
       # Apply change to money and current bet in model
       @current_player.bet_money!(params[:player][:current_bet].to_i )
@@ -80,6 +80,35 @@ class GameSessionsController < ApplicationController
   end
 
   def insurance_phase
+    if @current_player.is_ai
+
+      # Resolve Dealer turn for Insurance
+      if @current_player.is_dealer?
+        if @current_player.best_value == 21
+          @game_session.set_phase!(GameSession::PHASE_RESOLVE)
+          redirect_to action: "resolve_phase", cause: CAUSE_INSURANCE_NATURAL
+        else
+          @game_session.set_phase!(GameSession::PHASE_PLAY)
+          redirect_to action: "play_phase"
+        end
+        return
+      end
+
+      # Normal AI Turn
+      if @current_player.can_side_bet?
+        rand(2) == 0 ? @current_player.side_bet! : nil
+        @game_session.next_player_turn!
+        redirect_to action: "insurance_phase"
+      end
+    end
+  end
+
+  def insurance_response
+    if ActiveModel::Type::Boolean.new.cast(params[:use_insurance]) and @current_player.can_side_bet?
+      @current_player.side_bet!
+    end
+    @game_session.next_player_turn!
+    redirect_to action: "insurance_phase"
   end
 
   def play_phase

@@ -1,2 +1,14 @@
 <h1>INSURANCE</h1>
 <%= render "info_screen" %>
+
+<h2><%= @current_player.name %> 's Turn</h2>
+<h4>Bet half your current bet (rounded up) that the dealer has a Natural (21)?</h4>
+
+<% side_bet = (@current_player.current_bet.to_f / 2).ceil %>
+<% if @current_player.can_side_bet? %>
+    <%= button_to "Yes, Side Bet #{(@current_player.current_bet.to_f / 2).ceil}", {controller: "game_sessions", action: "insurance_response", use_insurance: true}, method: :post %>
+    <%= button_to "No", {controller: "game_sessions", action: "insurance_response", use_insurance: false}, method: :post %>
+<% else %>
+    <h5>You lack the funds to make a side bet</h5>
+    <%= button_to "Continue", {controller: "game_sessions", action: "insurance_response", use_insurance: false}, method: :post %>
+<% end %>
