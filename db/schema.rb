@@ -16,12 +16,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_10_235248) do
 
   create_table "cards", force: :cascade do |t|
     t.bigint "game_session_id", null: false
-    t.bigint "player_id", null: false
+    t.bigint "player_id"
     t.boolean "is_split", default: false
     t.boolean "in_discard", default: false
-    t.boolean "in_deck", default: false
-    t.boolean "is_ace", default: false
-    t.string "card_symbol"
+    t.boolean "in_deck", default: true
+    t.boolean "is_face_down", default: false
+    t.string "symbol"
+    t.string "suite"
     t.integer "value"
     t.index ["game_session_id"], name: "index_cards_on_game_session_id"
     t.index ["player_id"], name: "index_cards_on_player_id"
@@ -29,7 +30,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_10_235248) do
 
   create_table "game_sessions", force: :cascade do |t|
     t.string "session_id"
-    t.integer "player_turn"
+    t.integer "player_turn", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -38,17 +39,19 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_10_235248) do
     t.bigint "game_session_id", null: false
     t.integer "money"
     t.integer "current_bet", default: 0
+    t.integer "side_bet", default: 0
     t.string "name"
     t.integer "order"
     t.boolean "insurance", default: false
     t.boolean "double_down", default: false
-    t.boolean "is_ai"
+    t.boolean "is_split", default: false
+    t.boolean "is_ai", default: true
     t.index ["game_session_id"], name: "index_players_on_game_session_id"
   end
 
   create_table "settings", force: :cascade do |t|
     t.string "session_id"
-    t.integer "starting_money"
+    t.integer "starting_money", default: 1000
     t.integer "pc_count", default: 1
     t.integer "total_players", default: 1
     t.integer "deck_count", default: 1
