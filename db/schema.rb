@@ -31,6 +31,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_10_235248) do
   create_table "game_sessions", force: :cascade do |t|
     t.string "session_id"
     t.integer "player_turn", default: 0
+    t.integer "phase", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

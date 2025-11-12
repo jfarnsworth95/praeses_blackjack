@@ -5,16 +5,16 @@
 
 <%= form_for @settings do |f| %>
     <%= f.label :starting_money %>:
-    <%= f.text_field :starting_money %><br />
+    <%= f.number_field :starting_money, in: Setting::MIN_STARTING_MONEY..Setting::MAX_STARING_MONEY, step: 1 %><br />
 
-    <%= f.label :player_count %>:
-    <%= f.text_field :pc_count %><br />
+    <%= f.label :human_players %>:
+    <%= f.number_field :pc_count, in: Setting::MIN_TOTAL_PLAYERS..Setting::MAX_TOTAL_PLAYERS, step: 1 %><br />
 
     <%= f.label :total_players %>:
-    <%= f.text_field :total_players %><br />
+    <%= f.number_field :total_players, in: Setting::MIN_TOTAL_PLAYERS..Setting::MAX_TOTAL_PLAYERS, step: 1 %><br />
 
     <%= f.label :deck_count %>:
-    <%= f.text_field :deck_count %><br />
+    <%= f.number_field :deck_count, in: Setting::MIN_DECK_COUNT..Setting::MAX_DECK_COUNT, step: 1 %><br />
 
     <%= f.submit %><br />
 <% end %>

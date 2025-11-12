@@ -1,8 +1,13 @@
 class GameSession < ApplicationRecord
-    has_many :player
-    has_many :card
+    has_many :player, dependent: :destroy
+    has_many :card, dependent: :destroy
 
     DEFAULT_AI_NAMES = ["Arthur", "Sherlock", "Ryan", "Javier", "Leo", "Christine", "Beth", "Brice", "Morgan", "Jamie"]
+    PHASE_BETTING = 0
+    PHASE_INSURANCE = 1
+    PHASE_PLAY = 2
+    PHASE_RESOLVE = 3
+    PHASE_ALL_PC_BANKRUPT = 4
 
     def self.create_game(session_id)
         GameSession.transaction do
@@ -37,11 +42,15 @@ class GameSession < ApplicationRecord
         total_ai.times do |x|
             Player.create(:game_session => @game_session, :money => @settings.starting_money, :name => DEFAULT_AI_NAMES[x], :order => total_pcs + x)
         end
+        
+        # Add one AI to account for Dealer
+        Player.create(:game_session => @game_session, :money => @settings.starting_money, :name => "Dealer", :order => total_players)
+
     end
 
     # Draws a card, removes the card from the draw pile, assigns to a player, and CAN assign to a split if one is created
     # Also flip a can face_down (for dealer)
-    def self.draw_card!(player, split=false, dealer_face_down=false)
+    def draw_card!(player, split=false, dealer_face_down=false)
         deck = Card.where(game_session: self, in_deck: true)
         drawn_card = deck[rand(deck.count)]
         drawn_card.player = player
@@ -50,7 +59,6 @@ class GameSession < ApplicationRecord
         drawn_card.in_deck = false
         drawn_card.save!
     end
-
 
     # Discards all cards in play
     def discard_dealt_cards!
@@ -69,9 +77,20 @@ class GameSession < ApplicationRecord
     end
 
     # Check if Insurance can be played (Dealer has faceup ace)
-    def self.insurance_triggered?()
-        Player.where(game_session: self).maximum(:order)
+    def insurance_triggered?
+        dealer_player = Player.where(game_session: self).order(order: :desc).first
         Card.where(player: dealer_player, is_face_down: false).first.symbol == "A"
+    end
+
+    def set_phase!(phase_id)
+        self.player_turn = 0
+        self.phase = phase_id
+        self.save!
+    end
+
+    def next_player_turn!
+        self.player_turn += 1
+        self.save!
     end
 
 

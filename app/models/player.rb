@@ -1,5 +1,6 @@
 class Player < ApplicationRecord
   belongs_to :game_session
+  has_many :card, dependent: :destroy
 
   def bet_money!(total_bet)
     self.money -= total_bet

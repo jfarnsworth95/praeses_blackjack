@@ -1,0 +1,23 @@
+<% @players[0..-2].each do |player| %>
+    <h4><%= player.name %>: $<%= player.money %> <% if player.current_bet > 0 %> (<%= player.current_bet %>) <% end %></h4>
+    <% if @cards.where(player: player).count > 0 %>
+        <div class='box'>
+            <% @cards.where(player: player).each do |card| %>
+                <div class='<%="card #{card.symbol} #{card.suite}" %>' ><%= "#{card.suite} #{card.symbol}" %></div>
+            <% end %>
+        </div>
+    <% end %>
+<% end %>
+
+<h4><%= @players[-1].name %>
+<% if @cards.where(player: @players[-1]).count > 0 %>
+    <div class='box'>
+        <% @cards.where(player: @players[-1]).each do |card| %>
+            <% if (card.is_face_down and [GameSession::PHASE_PLAY, GameSession::PHASE_INSURANCE].include? @game_session.phase) %>
+            <div class='card flipped'> ? ? </div>
+            <% else %>
+            <div class='<%= "card #{card.symbol} #{card.suite}" %>' ><%= "#{card.suite} #{card.symbol}" %></div>
+            <% end %>
+        <% end %>
+    </div>
+<% end %>

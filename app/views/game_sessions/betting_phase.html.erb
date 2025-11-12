@@ -1,0 +1,14 @@
+<h1>BETTING</h1>
+<%= render "info_screen" %>
+
+<h2><%= @current_player.name %> 's Turn</h2>
+<%= form_for @current_player, method: :post, url: :submit_bet do |f| %>
+    <%= f.label :bet %>
+    <%= f.number_field :current_bet, in: 1..[@current_player.money, 500].min, step: 1, value: 1 %>
+
+    <%= f.submit "Bet" %><br />
+<% end %>
+
+<% if flash[:submit_bet_error] %>
+<h4><%= flash[:submit_bet_error] %>
+<% end %>
