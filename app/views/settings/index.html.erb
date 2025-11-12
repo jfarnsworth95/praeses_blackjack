@@ -1,0 +1,22 @@
+<h1>Settings</h1>
+<% if flash[:settings_error] %>
+    <h2><%= flash[:settings_error] %></h2><br />
+<% end %>
+
+<%= form_for @settings do |f| %>
+    <%= f.label :starting_money %>:
+    <%= f.text_field :starting_money %><br />
+
+    <%= f.label :player_count %>:
+    <%= f.text_field :pc_count %><br />
+
+    <%= f.label :total_players %>:
+    <%= f.text_field :total_players %><br />
+
+    <%= f.label :deck_count %>:
+    <%= f.text_field :deck_count %><br />
+
+    <%= f.submit %><br />
+<% end %>
+
+<%= button_to "Back", "/", method: :get %>
