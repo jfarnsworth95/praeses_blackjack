@@ -3,7 +3,7 @@ class Setting < ApplicationRecord
     MIN_STARTING_MONEY = 10
     MAX_STARING_MONEY = 10000
     MIN_TOTAL_PLAYERS = 1
-    MAX_TOTAL_PLAYERS = 10
+    MAX_TOTAL_PLAYERS = 9
     MIN_DECK_COUNT = 1
     MAX_DECK_COUNT = 8
 

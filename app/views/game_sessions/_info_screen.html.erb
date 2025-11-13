@@ -1,14 +1,20 @@
-<% @players[0..-2].each do |player| %>
-    <h4><%= player.name %>: $<%= player.money %> 
-        <% if @game_session.phase != GameSession::PHASE_RESOLVE %>
-            <%= render partial: "bet_display", locals: {player: player} %>
-        <% else %>
-            <%= render partial: "winnings_display", locals: {player: player} %>
-        <% end %>
-    </h4>
-    <%= render partial: "show_cards", locals: {player: player} %>
-<% end %>
-
-<% dealer = @players[-1] %>
-<h4><%= dealer.name %><% if @game_session.phase == GameSession::PHASE_RESOLVE %> | <%= dealer.best_value %> <% end %></h4>
-<%= render partial: "show_cards", locals: {player: dealer} %>
+<div class="player_panel_collection">
+    <% @players.each do |player| %>
+        <div class="player_panel">
+            <div class="player_info">
+                <p class="player_name_text"><%= player.name %></p>
+                <p class="player_money_text"><% unless player.is_dealer? %>$<%= player.money %><% end %></p>
+                <p class="player_conditional_text">
+                    <% if @game_session.phase != GameSession::PHASE_RESOLVE %>
+                        <%= render partial: "bet_display", locals: {player: player} %>
+                    <% else %>
+                        <%= render partial: "winnings_display", locals: {player: player} %>
+                    <% end %>
+                </p>
+            </div>
+            <div class="player_card_channel">
+                <%= render partial: "show_cards", locals: {player: player} %>
+            </div>
+        </div>
+    <% end %>
+</div>

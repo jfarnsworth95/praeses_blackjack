@@ -1,14 +1,22 @@
 <%= render partial: "shared/nav", locals: {title: "Betting"} %>
 <%= render partial: "info_screen" %>
 
-<h2><%= @current_player.name %> 's Turn</h2>
 <%= form_for @current_player, method: :post, url: :submit_bet do |f| %>
-    <%= f.label :bet %>
-    <%= f.number_field :current_bet, in: 1..[@current_player.money, 500].min, step: 1, value: 1 %>
+    <div class="basic_wrapper_multi">
+        <h2><%= @current_player.name %> 's Turn</h2>
+        <%= f.number_field :current_bet, in: 1..[@current_player.money, 500].min, step: 1, value: 1 %>
 
-    <%= f.submit "Bet" %><br />
+        <div class='casino_btn_wrapper'>
+            <div class='casino_btn_inner_wrapper'>
+                <%= f.submit "Bet", class: "casino_btn" %><br />
+            </div>
+        </div>
+</div>
 <% end %>
 
 <% if flash[:submit_bet_error] %>
-<h4><%= flash[:submit_bet_error] %>
+<br/>
+<div id='flash_wrapper' class='basic_wrapper_single'>
+    <h2><%= flash[:submit_bet_error] %></h2><br />
+</div>
 <% end %>
