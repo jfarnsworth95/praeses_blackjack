@@ -1,5 +1,16 @@
-<h1>Game Over</h1>
-<h3>All Human players are out of cash.</h3>
-<h3>The House always wins</h3>
+<%= render partial: "shared/nav", locals: {title: "Game Over"} %>
 <%= render "info_screen" %>
-<%= button_to "Back to Menu", "/", method: :get %>
+<div class='basic_wrapper_single'>
+    <div>
+        <h3>All Human players are out of cash.</h3>
+        <h3>The House always wins</h3>
+    </div>
+</div>
+
+<div class='actions_wrapper'>
+    <div class='casino_btn_wrapper'>
+        <div class='casino_btn_inner_wrapper'>
+            <%= button_to "Menu", "/", class: "casino_btn", method: :get %>
+        </div>
+    </div>
+</div>

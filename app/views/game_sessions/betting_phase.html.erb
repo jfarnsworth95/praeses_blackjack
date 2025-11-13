@@ -4,7 +4,7 @@
 <%= form_for @current_player, method: :post, url: :submit_bet do |f| %>
     <div class="basic_wrapper_multi">
         <h2><%= @current_player.name %> 's Turn</h2>
-        <%= f.number_field :current_bet, in: 1..[@current_player.money, 500].min, step: 1, value: 1 %>
+        <%= f.number_field :current_bet, in: 1..[@current_player.money, 500].min, step: 1, value: @last_bet %>
 
         <div class='casino_btn_wrapper'>
             <div class='casino_btn_inner_wrapper'>

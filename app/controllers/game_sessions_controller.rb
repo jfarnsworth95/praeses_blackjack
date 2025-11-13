@@ -33,6 +33,7 @@ class GameSessionsController < ApplicationController
     @players = @game_session.player.order(:order)
     @current_player = @players.where(order: @game_session.player_turn).first
     @cards = Card.where(game_session: @game_session).where.not(player: nil).order(:updated_at => :asc)
+    @last_bet = session[@current_player.name] || 1
   end
 
   # Ensure an API call can't be used to skip around
@@ -76,15 +77,17 @@ class GameSessionsController < ApplicationController
   end
 
   def submit_bet
+    bet = params[:player][:current_bet].to_i
     # Verify player can afford bet
-    if @current_player.can_bet?(params[:player][:current_bet].to_i )
+    if @current_player.can_bet?(bet)
 
       # Apply change to money and current bet in model
-      @current_player.bet_money!(params[:player][:current_bet].to_i )
+      @current_player.bet_money!(bet)
 
       # Advance player turn
       @game_session.next_player_turn!
       @players.reload
+      session[@current_player.name] = bet
       redirect_to action: "betting_phase"
     else
       flash[:submit_bet_error] = "You don't have enough money to bet that"
@@ -155,8 +158,10 @@ class GameSessionsController < ApplicationController
     cause = params[:cause].to_i
     case cause
     when CAUSE_INSURANCE_NATURAL
+      flash[:resolve_cause] = "Dealer DID have a Natural... hope you had Insurance."
       self.resolve_insurance_nat
     when CAUSE_NATURALS
+      flash[:resolve_cause] = "Someone had a Natural... hope you did too."
       self.resolve_nats
     when CAUSE_STANDARD
       self.resolve_standard

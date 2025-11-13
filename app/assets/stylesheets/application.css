@@ -223,6 +223,10 @@ h1 {
   grid-template-columns: 1fr 1fr 1fr;
 }
 
+.player_out {
+  text-decoration: line-through;
+}
+
 .insurance_yes_no_pair_wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;

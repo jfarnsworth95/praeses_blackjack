@@ -8,3 +8,10 @@
         </div>
     </div>
 </div>
+
+<% if flash[:resolve_cause] %>
+<br/>
+<div id='flash_wrapper' class='basic_wrapper_single'>
+    <h2><%= flash[:resolve_cause] %></h2><br />
+</div>
+<% end %>
