@@ -1,4 +1,10 @@
-<h1>RESOLVE</h1>
+<%= render partial: "shared/nav", locals: {title: "Resolve"} %>
 <%= render "info_screen" %>
 
-<%= button_to "Next Round", {controller: "game_sessions", action: "next_round"}, method: :post %>
+<div class='actions_wrapper'>
+    <div class='casino_btn_wrapper'>
+        <div class='casino_btn_inner_wrapper'>
+            <%= button_to "Continue", {controller: "game_sessions", action: "next_round"}, class: "casino_btn", method: :post %>
+        </div>
+    </div>
+</div>
