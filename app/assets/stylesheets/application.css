@@ -207,13 +207,15 @@ h1 {
 }
 
 .player_panel {
-    background-color: #003631;
-    border-radius: 15px;
-    padding: 0 15px;
+  background-color: #003631;
+  border-radius: 15px;
+  padding: 0 15px;
 }
 
 .player_card_channel {
-  
+  padding: 0 10px 10px 10px;
+  display: flex;
+  gap: 5px;
 }
 
 .player_info {
@@ -221,9 +223,29 @@ h1 {
   grid-template-columns: 1fr 1fr 1fr;
 }
 
+.insurance_yes_no_pair_wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-items: center;
+  padding-bottom: 10px;
+}
 
+ul ul{
+  position:absolute;  
+  top:0px;
+  left: 15px;   
+}
 
-
-
+.play_actions_wrapper {
+  margin: 10px auto;
+  display: flex;
+  padding: 15px 20px;
+  background-color: #003631;
+  border-radius: 15px;
+  width: fit-content;
+  height: fit-content;
+  align-items: center;
+  gap: 20px;
+}
 
 

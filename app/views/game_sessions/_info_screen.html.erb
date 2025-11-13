@@ -4,17 +4,15 @@
             <div class="player_info">
                 <p class="player_name_text"><%= player.name %></p>
                 <p class="player_money_text"><% unless player.is_dealer? %>$<%= player.money %><% end %></p>
-                <p class="player_conditional_text">
+                <div class="player_conditional_wrapper">
                     <% if @game_session.phase != GameSession::PHASE_RESOLVE %>
                         <%= render partial: "bet_display", locals: {player: player} %>
                     <% else %>
                         <%= render partial: "winnings_display", locals: {player: player} %>
                     <% end %>
-                </p>
+                </div>
             </div>
-            <div class="player_card_channel">
-                <%= render partial: "show_cards", locals: {player: player} %>
-            </div>
+            <%= render partial: "show_cards", locals: {player: player} %>
         </div>
     <% end %>
 </div>

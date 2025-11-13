@@ -32,7 +32,7 @@ class GameSessionsController < ApplicationController
     @settings = Setting.where(session_id: session[:session_id]).first_or_create
     @players = @game_session.player.order(:order)
     @current_player = @players.where(order: @game_session.player_turn).first
-    @cards = Card.where(game_session: @game_session).where.not(player: nil)
+    @cards = Card.where(game_session: @game_session).where.not(player: nil).order(:updated_at => :asc)
   end
 
   # Ensure an API call can't be used to skip around

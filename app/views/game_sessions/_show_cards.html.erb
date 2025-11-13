@@ -1,23 +1,14 @@
 <% if @cards.where(player: player).count > 0 %>
-    <div class='box'>
-        <% @cards.where(player: player, is_split: false).each do |card| %>
-            <% if (card.is_face_down and [GameSession::PHASE_PLAY, GameSession::PHASE_INSURANCE].include?(@game_session.phase)) %>
-            <div class='card flipped'> ? ? </div>
-            <% else %>
-            <div class='<%= "card #{card.symbol} #{card.suite}" %>' ><%= "#{card.suite} #{card.symbol}" %></div>
-            <% end %>
-        <% end %>
+    <div class="player_card_channel">
+    <% @cards.where(player: player, is_split: false).each do |card| %>
+        <%= render partial: "card", locals: {card: card} %>
+    <% end %>
     </div>
     <% if player.is_split %>
-    <br/>
-    <div class='split_box'>
+        <div class="player_card_channel">
         <% @cards.where(player: player, is_split: true).each do |card| %>
-            <% if (card.is_face_down and [GameSession::PHASE_PLAY, GameSession::PHASE_INSURANCE].include?(@game_session.phase)) %>
-            <div class='card flipped'> ? ? </div>
-            <% else %>
-            <div class='<%= "card #{card.symbol} #{card.suite}" %>' ><%= "#{card.suite} #{card.symbol}" %></div>
-            <% end %>
+            <%= render partial: "card", locals: {card: card} %>
         <% end %>
-    </div>
+        </div>
     <% end %>
 <% end %>

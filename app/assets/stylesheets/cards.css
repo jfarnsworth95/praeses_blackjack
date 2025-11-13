@@ -1,0 +1,167 @@
+.card {
+    width: 88px;
+    height: 124px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.card-back {
+  background-image: url('cards/back.png');
+}
+.card-h2 {
+  background-image: url('cards/h2.png');
+}
+.card-h3 {
+  background-image: url('cards/h3.png');
+}
+.card-h4 {
+  background-image: url('cards/h4.png');
+}
+.card-h5 {
+  background-image: url('cards/h5.png');
+}
+.card-h6 {
+  background-image: url('cards/h6.png');
+}
+.card-h7 {
+  background-image: url('cards/h7.png');
+}
+.card-h8 {
+  background-image: url('cards/h8.png');
+}
+.card-h9 {
+  background-image: url('cards/h9.png');
+}
+.card-h10 {
+  background-image: url('cards/h10.png');
+}
+.card-hj {
+  background-image: url('cards/hj.png');
+}
+.card-hq {
+  background-image: url('cards/hq.png');
+}
+.card-hk {
+  background-image: url('cards/hk.png');
+}
+.card-ha {
+  background-image: url('cards/ha.png');
+}
+.card-s2 {
+  background-image: url('cards/s2.png');
+}
+.card-s3 {
+  background-image: url('cards/s3.png');
+}
+.card-s4 {
+  background-image: url('cards/s4.png');
+}
+.card-s5 {
+  background-image: url('cards/s5.png');
+}
+.card-s6 {
+  background-image: url('cards/s6.png');
+}
+.card-s7 {
+  background-image: url('cards/s7.png');
+}
+.card-s8 {
+  background-image: url('cards/s8.png');
+}
+.card-s9 {
+  background-image: url('cards/s9.png');
+}
+.card-s10 {
+  background-image: url('cards/s10.png');
+}
+.card-sj {
+  background-image: url('cards/sj.png');
+}
+.card-sq {
+  background-image: url('cards/sq.png');
+}
+.card-sk {
+  background-image: url('cards/sk.png');
+}
+.card-sa {
+  background-image: url('cards/sa.png');
+}
+.card-d2 {
+  background-image: url('cards/d2.png');
+}
+.card-d3 {
+  background-image: url('cards/d3.png');
+}
+.card-d4 {
+  background-image: url('cards/d4.png');
+}
+.card-d5 {
+  background-image: url('cards/d5.png');
+}
+.card-d6 {
+  background-image: url('cards/d6.png');
+}
+.card-d7 {
+  background-image: url('cards/d7.png');
+}
+.card-d8 {
+  background-image: url('cards/d8.png');
+}
+.card-d9 {
+  background-image: url('cards/d9.png');
+}
+.card-d10 {
+  background-image: url('cards/d10.png');
+}
+.card-dj {
+  background-image: url('cards/dj.png');
+}
+.card-dq {
+  background-image: url('cards/dq.png');
+}
+.card-dk {
+  background-image: url('cards/dk.png');
+}
+.card-da {
+  background-image: url('cards/da.png');
+}
+.card-c2 {
+  background-image: url('cards/c2.png');
+}
+.card-c3 {
+  background-image: url('cards/c3.png');
+}
+.card-c4 {
+  background-image: url('cards/c4.png');
+}
+.card-c5 {
+  background-image: url('cards/c5.png');
+}
+.card-c6 {
+  background-image: url('cards/c6.png');
+}
+.card-c7 {
+  background-image: url('cards/c7.png');
+}
+.card-c8 {
+  background-image: url('cards/c8.png');
+}
+.card-c9 {
+  background-image: url('cards/c9.png');
+}
+.card-c10 {
+  background-image: url('cards/c10.png');
+}
+.card-cj {
+  background-image: url('cards/cj.png');
+}
+.card-cq {
+  background-image: url('cards/cq.png');
+}
+.card-ck {
+  background-image: url('cards/ck.png');
+}
+.card-ca {
+  background-image: url('cards/ca.png');
+}
