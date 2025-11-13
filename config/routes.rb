@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   post "/submit_bet", to: "game_sessions#submit_bet", as: :submit_bet
   get "/insurance", to: "game_sessions#insurance_phase"
   post "game_sessions/insurance_response", to: "game_sessions#insurance_response"
+  post "game_sessions/play", to: "game_sessions#play"
   get "/play", to: "game_sessions#play_phase"
   get "/resolve", to: "game_sessions#resolve_phase"
   get "/game_over", to: "game_sessions#all_pc_bankrupt_phase"

@@ -52,6 +52,10 @@ class GameSession < ApplicationRecord
     # Also flip a can face_down (for dealer)
     def draw_card!(player, split=false, dealer_face_down=false)
         deck = Card.where(game_session: self, in_deck: true)
+        if deck.count == 0
+            self.shuffle_deck!
+            deck = Card.where(game_session: self, in_deck: true)
+        end
         drawn_card = deck[rand(deck.count)]
         drawn_card.player = player
         drawn_card.is_split = split
@@ -64,6 +68,12 @@ class GameSession < ApplicationRecord
     def discard_dealt_cards!
         dealt_cards = Card.where(game_session: self).where.not(player: nil)
         dealt_cards.update_all(player_id: nil, in_discard: true)
+        dealt_cards.each(&:save)
+    end
+
+    def shuffle_deck!
+        discard_pile = Card.where(game_session: self, in_discard: true)
+        dealt_cards.update_all(in_deck: true, in_discard: false)
         dealt_cards.each(&:save)
     end
 
@@ -90,8 +100,8 @@ class GameSession < ApplicationRecord
 
     def next_player_turn!
         self.player_turn += 1
+        self.on_player_split = false
         self.save!
     end
-
 
 end

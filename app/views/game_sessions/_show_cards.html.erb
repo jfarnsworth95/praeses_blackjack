@@ -1,0 +1,21 @@
+<div class='box'>
+    <% @cards.where(player: player, is_split: false).each do |card| %>
+        <% if (card.is_face_down and [GameSession::PHASE_PLAY, GameSession::PHASE_INSURANCE].include?(@game_session.phase)) %>
+        <div class='card flipped'> ? ? </div>
+        <% else %>
+        <div class='<%= "card #{card.symbol} #{card.suite}" %>' ><%= "#{card.suite} #{card.symbol}" %></div>
+        <% end %>
+    <% end %>
+</div>
+<% if player.is_split %>
+<br/>
+<div class='split_box'>
+    <% @cards.where(player: player, is_split: true).each do |card| %>
+        <% if (card.is_face_down and [GameSession::PHASE_PLAY, GameSession::PHASE_INSURANCE].include?(@game_session.phase)) %>
+        <div class='card flipped'> ? ? </div>
+        <% else %>
+        <div class='<%= "card #{card.symbol} #{card.suite}" %>' ><%= "#{card.suite} #{card.symbol}" %></div>
+        <% end %>
+    <% end %>
+</div>
+<% end %>

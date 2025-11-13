@@ -1,2 +1,33 @@
 <h1>PLAY</h1>
 <%= render "info_screen" %>
+
+<h3><%= @current_player.name %>'s Turn</h3>
+<% if @current_player.is_split %>
+    <h3>Your first hand is currently at <%= @current_player.best_value %></h3>
+    <h3>Your second hand is currently at <%= @current_player.best_value(true) %></h3>
+    <% if @game_session.on_player_split %>
+        <h4>You are currently on your second hand</h4>
+    <% else %>
+        <h4>You are currently on your first hand</h4>
+    <% end %>
+<% else %>
+    <h3>Your hand is currently at <%= @current_player.best_value %></h3>
+<% end %>
+
+<%= button_to "Stand", {controller: "game_sessions", action: "play", request: GameSessionsController::REQUEST_STAND, on_split: @game_session.on_player_split }, method: :post %>
+<% if not @current_player.has_bust? %>
+    <%= button_to "Hit", {controller: "game_sessions", action: "play", request: GameSessionsController::REQUEST_HIT, on_split: @game_session.on_player_split }, method: :post %>
+<% end %>
+<% if @current_player.can_double_down? %>
+    <%= button_to "Double Down", {controller: "game_sessions", action: "play", request: GameSessionsController::REQUEST_DOUBLE_DOWN }, method: :post %>
+<% end %>
+<% if @current_player.can_split? %>
+    <%= button_to "Split", {controller: "game_sessions", action: "play", request: GameSessionsController::REQUEST_SPLIT }, method: :post %>
+<% end %>
+<% if @current_player.can_double_down_and_split? %>
+    <%= button_to "Double Down & Split", {controller: "game_sessions", action: "play", request: GameSessionsController::REQUEST_DOUBLE_DOWN_AND_SPLIT }, method: :post %>
+<% end %>
+
+<% if flash[:play_error] %>
+<h2><%= flash[:play_error] %></h2>
+<% end %>

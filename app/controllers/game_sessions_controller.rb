@@ -7,6 +7,12 @@ class GameSessionsController < ApplicationController
   CAUSE_NATURALS = 0
   CAUSE_INSURANCE_NATURAL = 1
 
+  REQUEST_STAND = 0
+  REQUEST_HIT = 1
+  REQUEST_DOUBLE_DOWN = 2
+  REQUEST_SPLIT = 3
+  REQUEST_DOUBLE_DOWN_AND_SPLIT = 4
+
   # Delete old games if session has some still kicking around
   def before_start_game
     GameSession.where(session_id: session[:session_id]).destroy_all
@@ -31,7 +37,7 @@ class GameSessionsController < ApplicationController
     when GameSession::PHASE_INSURANCE
       ["insurance_phase", "insurance_response"].include?(param_to_phase) ? nil : redirect_to( action: "insurance_phase")
     when GameSession::PHASE_PLAY
-      param_to_phase == "play_phase" ? nil : redirect_to( action: "play_phase")
+      ["play_phase", "play"].include?(param_to_phase) ? nil : redirect_to( action: "play_phase")
     when GameSession::PHASE_RESOLVE
       param_to_phase == "resolve_phase" ? nil : redirect_to( action: "resolve_phase")
     when GameSession::PHASE_ALL_PC_BANKRUPT
@@ -75,8 +81,6 @@ class GameSessionsController < ApplicationController
       flash[:submit_bet_error] = "You don't have enough money to bet that"
       redirect_to action: "betting_phase"
     end
-
-
   end
 
   def insurance_phase
@@ -112,6 +116,28 @@ class GameSessionsController < ApplicationController
   end
 
   def play_phase
+    # All AI will act like the dealer, they will never attempt to double down or split
+    if @current_player.is_ai
+      self.ai_play
+    end
+  end
+
+  def play
+    request = params[:request].to_i
+
+    case request
+    when REQUEST_STAND
+      self.user_req_stand
+    when REQUEST_HIT
+      self.user_req_hit
+    when REQUEST_DOUBLE_DOWN
+      self.user_req_double_down
+    when REQUEST_SPLIT
+      self.user_req_split
+    when REQUEST_DOUBLE_DOWN_AND_SPLIT
+      self.user_req_double_down_and_split
+    end
+
   end
 
   def resolve_phase
@@ -159,5 +185,73 @@ class GameSessionsController < ApplicationController
     end
   end
 
+  def ai_play
+    while @current_player.best_value < 17
+      @game_session.draw_card!(@current_player)
+    end
+    if @current_player.is_dealer?
+      @game_session.set_phase!(GameSession::PHASE_RESOLVE)
+      redirect_to action: "resolve_phase"
+      return
+    end
+    @game_session.next_player_turn!
+    redirect_to action: "play_phase"
+    return
+  end
+
+  def user_req_hit
+    @game_session.draw_card!(@current_player, @game_session.on_player_split)
+    if @current_player.has_bust?(@game_session.on_player_split)
+      if @current_player.is_split and !@game_session.on_player_split
+        @game_session.on_player_split = true
+        @game_session.save!
+      else
+        @game_session.next_player_turn!
+      end
+    end
+    redirect_to action: "play_phase"
+  end
+
+  def user_req_stand
+    if !@game_session.on_player_split and @current_player.is_split
+      @game_session.on_player_split = true
+      @game_session.save!
+    else
+      @game_session.next_player_turn!
+    end
+    redirect_to action: "play_phase"
+  end
+
+  def user_req_double_down
+    if @current_player.can_double_down?
+      @current_player.double_down!
+      @game_session.draw_card!(@current_player, false, true)
+      @game_session.next_player_turn!
+    else
+      flash[:play_error] = "You cannot double down at this time"
+    end
+    redirect_to action: "play_phase"
+  end
+
+  def user_req_split
+    if @current_player.can_split?
+      @current_player.split!
+    else
+      flash[:play_error] = "You cannot split at this time"
+    end
+    redirect_to action: "play_phase"
+  end
+
+  def user_req_double_down_and_split
+    if @current_player.can_double_down_and_split?
+      @current_player.double_down_and_split!
+      @game_session.draw_card!(@current_player, false, true)
+      @game_session.draw_card!(@current_player, true, true)
+      @game_session.next_player_turn!
+    else
+      flash[:play_error] = "You cannot double down and split at this time"
+    end
+    redirect_to action: "play_phase"
+  end
 
 end

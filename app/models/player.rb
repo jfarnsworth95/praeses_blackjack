@@ -30,6 +30,32 @@ class Player < ApplicationRecord
     self.save!
   end
 
+  def double_down!
+    self.money -= self.current_bet
+    self.current_bet += self.current_bet
+    self.save!
+  end
+
+  def split!
+    self.money -= self.current_bet
+    self.current_bet += self.current_bet
+    self.is_split = true
+    card_to_split = Card.where(player: self).last
+    card_to_split.is_split = true
+    card_to_split.save!
+    self.save!
+  end
+
+  def double_down_and_split!
+    self.money -= self.current_bet * 3
+    self.current_bet += self.current_bet * 3
+    self.is_split = true
+    card_to_split = Card.where(player: self).last
+    card_to_split.is_split = true
+    card_to_split.save!
+    self.save!
+  end
+
   # Reset player booleans for fresh round
   def round_reset
     self.insurance = false
@@ -47,24 +73,29 @@ class Player < ApplicationRecord
   end
 
   # Checks if a player can double down (only possible if cards value 9, 10, or 11)
-  def can_double_down?()
-    [9, 10, 11].include?(self.best_value)
+  def can_double_down?
+    hand = Card.where(player: self)
+    hand.count == 2 and ([9, 10, 11].include?(self.best_value)) and self.can_bet?(self.current_bet * 3)
   end
 
   # Check if a player can split (same symbol on both cards)
-  def can_split?()
+  def can_split?
     hand = Card.where(player: self)
-    hand[0].symbol == hand[1].symbol
+    hand.count == 2 and !self.is_split and (hand[0].symbol == hand[1].symbol) and self.can_bet?(self.current_bet)
   end
 
   # Check if a player can double down AND split (requires two 5's)
-  def can_double_down_and_split?()
+  def can_double_down_and_split?
     hand = Card.where(player: self)
-    hand.pluck(:value).all? { |value| value == 5 }
+    hand.count == 2 and (hand.pluck(:value).all? { |value| value == 5 }) and self.can_bet?(self.current_bet)
   end
 
   def is_dealer?
     self.order == Player.where(game_session: self.game_session).maximum(:order)
+  end
+
+  def has_bust?(split=false)
+    self.best_value(split) > 21
   end
 
   # Check the player's hand for it's current value, if an Ace would cause a Bust, check again with it as a 1
