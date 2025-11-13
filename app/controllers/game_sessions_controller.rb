@@ -67,6 +67,7 @@ class GameSessionsController < ApplicationController
     if @current_player.money <= 0
       @game_session.next_player_turn!
       redirect_to action: "betting_phase"
+      return
     end
     if @current_player.is_ai
       ai_bet()
@@ -202,7 +203,6 @@ class GameSessionsController < ApplicationController
       # If Ace face up for Dealer, go to Insurance:
       @game_session.set_phase!(GameSession::PHASE_INSURANCE)
       redirect_to action: "insurance_phase"
-      return
     elsif @game_session.players_with_natural.count > 0
       # If anyone has naturals, go to resolve
       @game_session.set_phase!(GameSession::PHASE_RESOLVE)
