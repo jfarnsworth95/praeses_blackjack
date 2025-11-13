@@ -1,12 +1,14 @@
 <% @players[0..-2].each do |player| %>
-    <h4><%= player.name %>: $<%= player.money %> <% if player.current_bet > 0 %> (<%= player.current_bet %><% if player.side_bet > 0 %> [ <%= player.side_bet %> ] <% end %>) <% end %></h4>
-    <% if @cards.where(player: player).count > 0 %>
-        <%= render partial: "show_cards", locals: {player: player} %>
-    <% end %>
+    <h4><%= player.name %>: $<%= player.money %> 
+        <% if @game_session.phase != GameSession::PHASE_RESOLVE %>
+            <%= render partial: "bet_display", locals: {player: player} %>
+        <% else %>
+            <%= render partial: "winnings_display", locals: {player: player} %>
+        <% end %>
+    </h4>
+    <%= render partial: "show_cards", locals: {player: player} %>
 <% end %>
 
 <% dealer = @players[-1] %>
-<h4><%= dealer.name %>
-<% if @cards.where(player:dealer).count > 0 %>
-    <%= render partial: "show_cards", locals: {player: dealer} %>
-<% end %>
+<h4><%= dealer.name %><% if @game_session.phase == GameSession::PHASE_RESOLVE %> | <%= dealer.best_value %> <% end %></h4>
+<%= render partial: "show_cards", locals: {player: dealer} %>

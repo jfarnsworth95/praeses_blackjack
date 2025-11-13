@@ -1,11 +1,13 @@
 class GameSessionsController < ApplicationController
 
+  before_action :check_game_running, except: [:start_game]
   before_action :before_start_game, only: [:start_game]
   before_action :before_phase, except: [:start_game]
   before_action :check_phase_mismatch, except: [:start_game]
 
   CAUSE_NATURALS = 0
   CAUSE_INSURANCE_NATURAL = 1
+  CAUSE_STANDARD = 2
 
   REQUEST_STAND = 0
   REQUEST_HIT = 1
@@ -18,11 +20,17 @@ class GameSessionsController < ApplicationController
     GameSession.where(session_id: session[:session_id]).destroy_all
   end
 
+  def check_game_running
+    @game_session = GameSession.find_by(session_id: session[:session_id])
+    if @game_session == nil
+      redirect_to :root
+    end
+  end
+
   # Fetch data all the templates crave (needed for reused partial)
   def before_phase
-    @game_session = GameSession.find_by(session_id: session[:session_id])
     @settings = Setting.where(session_id: session[:session_id]).first_or_create
-    @players = Player.where(game_session: @game_session).order(:order)
+    @players = @game_session.player.order(:order)
     @current_player = @players.where(order: @game_session.player_turn).first
     @cards = Card.where(game_session: @game_session).where.not(player: nil)
   end
@@ -39,7 +47,7 @@ class GameSessionsController < ApplicationController
     when GameSession::PHASE_PLAY
       ["play_phase", "play"].include?(param_to_phase) ? nil : redirect_to( action: "play_phase")
     when GameSession::PHASE_RESOLVE
-      param_to_phase == "resolve_phase" ? nil : redirect_to( action: "resolve_phase")
+      ["resolve_phase", "next_round"].include?(param_to_phase) ? nil : redirect_to( action: "resolve_phase")
     when GameSession::PHASE_ALL_PC_BANKRUPT
       param_to_phase == "all_pc_bankrupt" ? nil : redirect_to( action: "all_pc_bankrupt_phase")
     end
@@ -141,6 +149,28 @@ class GameSessionsController < ApplicationController
   end
 
   def resolve_phase
+    @winnings = {}
+
+    cause = params[:cause].to_i
+    case cause
+    when CAUSE_INSURANCE_NATURAL
+      self.resolve_insurance_nat
+    when CAUSE_NATURALS
+      self.resolve_nats
+    when CAUSE_STANDARD
+      self.resolve_standard
+    end
+  end
+
+  def next_round
+    if @game_session.are_all_humans_bankrupt?
+      @game_session.set_phase!(GameSession::PHASE_ALL_PC_BANKRUPT)
+      redirect_to action: "all_pc_bankrupt_phase"
+      return
+    else
+      @game_session.reset_for_new_round!
+      redirect_to action: "betting_phase"
+    end
   end
 
   def all_pc_bankrupt_phase
@@ -191,7 +221,7 @@ class GameSessionsController < ApplicationController
     end
     if @current_player.is_dealer?
       @game_session.set_phase!(GameSession::PHASE_RESOLVE)
-      redirect_to action: "resolve_phase"
+      redirect_to action: "resolve_phase", cause: CAUSE_STANDARD
       return
     end
     @game_session.next_player_turn!
@@ -253,5 +283,48 @@ class GameSessionsController < ApplicationController
     end
     redirect_to action: "play_phase"
   end
+
+  def resolve_insurance_nat
+    # First response to other natural winners
+    @game_session.players_with_natural.each do |player|
+      if player.is_dealer?
+        next
+      end
+      @winnings[player.id] = player.stand_off!
+      @winnings[player.id] += player.insurance_win!
+    end
+    (@players - @game_session.players_with_natural).each do |player|
+      if player.is_dealer?
+        next
+      end
+      if player.side_bet > 0
+        @winnings[player.id] = player.insurance_win!
+      end
+    end
+  end
+
+  def resolve_nats
+    natural_winners = @game_session.players_with_natural
+    dealer_natural = natural_winners.include?(dealer)
+    natural_winners.each do |player|
+      if player.is_dealer?
+        next
+      end
+      @winnings[player.id] = dealer_natural ? player.stand_off : player.natural_win!
+    end
+  end
+
+  def resolve_standard
+    dealer = @game_session.get_dealer
+    @players.each do |player|
+      if player.is_split
+        @winnings[player.id] = @game_session.did_player_win?(dealer, player, false) ? player.split_win! : 0
+        @winnings[player.id] += @game_session.did_player_win?(dealer, player, true) ? player.split_win! : 0
+      elsif @game_session.did_player_win?(dealer, player)
+        @winnings[player.id] = player.standard_win!
+      end
+    end
+  end
+
 
 end

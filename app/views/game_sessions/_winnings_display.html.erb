@@ -1,0 +1,9 @@
+<% if @winnings.keys.include?(player.id) %> 
+| Gained: $<%= @winnings[player.id] %> 
+<% elsif player.is_player_bankrupt? %>
+| Out
+<% elsif player.has_bust? %>
+| Bust
+<% else %>
+| Lost this round (<%= player.best_value %>)
+<% end %>

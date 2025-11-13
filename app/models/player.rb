@@ -9,17 +9,43 @@ class Player < ApplicationRecord
   end
 
   def natural_win!
-    self.money += (self.current_bet * 2.5).round
+    # Natural give you 150% plus your bet back
+    winnings = (self.current_bet * 2.5).round
+    self.money += winnings
     self.save!
+    winnings
+  end
+
+  def split_win!
+    # Each split carries an equal amount, 
+    # so winning one gets you x2 your bet, or the total of both split bets
+    winnings = self.current_bet
+    self.money += self.current_bet
+    self.save!
+    winnings
   end
 
   def insurance_win!
-    self.money += (self.side_bet * 2)
+    # Side bet more or less gets you back to even. 
+    # I'm not doing floats, so you can come out ahead
+    winnings = self.side_bet * 2
+    self.money += winnings
     self.save!
+    winnings
   end
 
   def standard_win!
-    self.money += (self.current_bet * 2)
+    # Standard win gets you 100% of your bet and the original bet back
+    # Side bet is quietly added back since it's really only for insurance
+    winnings = (self.current_bet * 2) + self.side_bet
+    self.money += winnings
+    self.save!
+    winnings
+  end
+
+  def stand_off!
+    # No gain, no loss
+    self.money += self.current_bet
     self.save!
   end
 
@@ -57,11 +83,12 @@ class Player < ApplicationRecord
   end
 
   # Reset player booleans for fresh round
-  def round_reset
+  def round_reset!
     self.insurance = false
     self.double_down = false
     self.is_split = false
     self.current_bet = false
+    self.save!
   end
 
   def can_bet?(total_bet)

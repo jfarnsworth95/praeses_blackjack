@@ -73,14 +73,14 @@ class GameSession < ApplicationRecord
 
     def shuffle_deck!
         discard_pile = Card.where(game_session: self, in_discard: true)
-        dealt_cards.update_all(in_deck: true, in_discard: false)
-        dealt_cards.each(&:save)
+        discard_pile.update_all(in_deck: true, in_discard: false)
+        discard_pile.each(&:save)
     end
 
     # Get all players with a Natural for the start of the round
     def players_with_natural
         naturals = []
-        Player.where(game_session: self).each { |player| 
+        self.player.each { |player| 
             Card.where(player: player).pluck(:value).sort == [10, 11] ? naturals.push(player) : nil
         }
         return naturals
@@ -88,8 +88,12 @@ class GameSession < ApplicationRecord
 
     # Check if Insurance can be played (Dealer has faceup ace)
     def insurance_triggered?
-        dealer_player = Player.where(game_session: self).order(order: :desc).first
+        dealer_player = self.get_dealer
         Card.where(player: dealer_player, is_face_down: false).first.symbol == "A"
+    end
+
+    def get_dealer
+        self.player.order(order: :desc).first
     end
 
     def set_phase!(phase_id)
@@ -102,6 +106,21 @@ class GameSession < ApplicationRecord
         self.player_turn += 1
         self.on_player_split = false
         self.save!
+    end
+
+    def did_player_win?(dealer, player, split=false)
+        dealer_total = dealer.best_value
+        !player.has_bust?(split) and (player.best_value(split) > dealer_total or dealer.has_bust?)
+    end
+
+    def are_all_humans_bankrupt?
+        Player.where(game_session: self, is_ai: false).all? { |player| player.is_player_bankrupt? }
+    end
+
+    def reset_for_new_round!
+        self.player.each(&:round_reset!)
+        self.discard_dealt_cards!
+        self.set_phase!(GameSession::PHASE_BETTING)
     end
 
 end
