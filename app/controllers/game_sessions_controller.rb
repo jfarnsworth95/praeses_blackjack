@@ -303,6 +303,7 @@ class GameSessionsController < ApplicationController
   end
 
   def resolve_nats
+    dealer = @game_session.get_dealer
     natural_winners = @game_session.players_with_natural
     dealer_natural = natural_winners.include?(dealer)
     natural_winners.each do |player|
