@@ -49,7 +49,7 @@ class GameSessionsController < ApplicationController
     when GameSession::PHASE_RESOLVE
       ["resolve_phase", "next_round"].include?(param_to_phase) ? nil : redirect_to( action: "resolve_phase")
     when GameSession::PHASE_ALL_PC_BANKRUPT
-      param_to_phase == "all_pc_bankrupt" ? nil : redirect_to( action: "all_pc_bankrupt_phase")
+      (param_to_phase == "all_pc_bankrupt_phase") ? nil : redirect_to( action: "all_pc_bankrupt_phase")
     end
 
   end
@@ -166,7 +166,6 @@ class GameSessionsController < ApplicationController
     if @game_session.are_all_humans_bankrupt?
       @game_session.set_phase!(GameSession::PHASE_ALL_PC_BANKRUPT)
       redirect_to action: "all_pc_bankrupt_phase"
-      return
     else
       @game_session.reset_for_new_round!
       redirect_to action: "betting_phase"
