@@ -13,3 +13,175 @@
  *= require_tree .
  *= require_self
  */
+
+@font-face {
+   font-family: 'gillsans';
+   src: url('gillsans.ttf');
+}
+
+ body {
+  background-image: url('background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  height: 85vh;
+
+  color: #ffeda8;
+ }
+
+* {
+  font-family: "gillsans" !important;
+ }
+
+ .nav_wrapper {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  height: 55px;
+ }
+
+ .nav_back_wrapper {
+  background-color: #FFFFFF;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ }
+
+ .nav_back_inner_wrapper {
+  background-image: url('casino_chip.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+ }
+
+ .nav_back {
+  background-color: black;
+  color: white;
+  padding: 1px;
+  border-radius: 3px;
+ }
+
+ .title_card {
+  margin: auto;
+  grid-column: 2;
+  margin-top: -8px;
+  width: fit-content;
+  height: fit-content;
+  padding: 0 15px 3px 15px;
+  border-radius: 0 0 30px 30px;
+  background-color: #003631;
+  text-align:center;
+ }
+
+ .menu_options_body {
+  display: grid;
+  height: 50vh;
+  grid-template-columns: 1fr auto 1fr;
+  justify-items: center;
+ }
+
+ .settings_flash_wraper {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 20px;
+  background-color: #003631;
+  border-radius: 15px;
+  width: fit-content;
+  height: fit-content;
+ }
+
+ .menu_options_container {
+  grid-column: 2;
+  padding: 50px min(120px, 25vw) 50px min(120px, 25vw);
+  background-color: #003631;
+  border-radius: 15px;
+  margin-top: auto;
+  margin-bottom: auto;
+ }
+ 
+ .menu_options_form_wrapper {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 10px;
+  justify-content: center;
+  align-items: center;
+ }
+
+ .menu_options_form_inner_wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 10px;
+  row-gap: 6px;
+ }
+
+ .casino_btn_wrapper {
+  background-color: #FFFFFF;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ }
+
+ .casino_btn_inner_wrapper {
+  background-image: url('casino_chip.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+ }
+
+ .casino_btn {
+  background: none;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: inherit;
+  border-radius: 0;
+  appearance: none;
+
+  background-color: black;
+  color: white;
+  padding: 1px;
+  border-radius: 3px;
+ }
+
+ .menu_option {
+  text-align: center;
+ }
+
+ .menu_option_link {
+  color: #ffeda8;
+  text-decoration:none; 
+ }
+
+ .menu_option_link:hover {
+  text-decoration-line: underline;
+ }
+
+ h1 {
+  margin: 0 auto 0;
+  text-align: center;
+  font-size: 50px;
+  display: block;
+}

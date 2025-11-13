@@ -1,22 +1,39 @@
-<h1>Settings</h1>
-<% if flash[:settings_error] %>
-    <h2><%= flash[:settings_error] %></h2><br />
+<%= render partial: "shared/nav", locals: {title: "Settings"} %>
+
+<div class="menu_options_body">
+    <div class='menu_options_container'>
+        <%= form_for @settings do |f| %>
+        <div class='menu_options_form_wrapper'>
+            <div class='menu_options_form_inner_wrapper'>
+                <%= f.label :starting_money %>
+                <%= f.number_field :starting_money, in: Setting::MIN_STARTING_MONEY..Setting::MAX_STARING_MONEY, step: 1 %>
+
+                <%= f.label :human_players %>
+                <%= f.number_field :pc_count, in: Setting::MIN_TOTAL_PLAYERS..Setting::MAX_TOTAL_PLAYERS, step: 1 %>
+
+                <%= f.label :total_players %>
+                <%= f.number_field :total_players, in: Setting::MIN_TOTAL_PLAYERS..Setting::MAX_TOTAL_PLAYERS, step: 1 %>
+
+                <%= f.label :deck_count %>
+                <%= f.number_field :deck_count, in: Setting::MIN_DECK_COUNT..Setting::MAX_DECK_COUNT, step: 1 %>
+
+            </div>
+            
+            <div class='casino_btn_wrapper'>
+                <div class='casino_btn_inner_wrapper'>
+                    <%= f.submit "Submit", class: "casino_btn" %>
+                </div>
+            </div>
+        </div>
+        <% end %>
+    </div>
+</div>
+
+<% if flash[:settings_resp] %>
+<br/>
+<div id='flash_wrapper' class='settings_flash_wraper'>
+    <h2><%= flash[:settings_resp] %></h2><br />
+</div>
 <% end %>
 
-<%= form_for @settings do |f| %>
-    <%= f.label :starting_money %>:
-    <%= f.number_field :starting_money, in: Setting::MIN_STARTING_MONEY..Setting::MAX_STARING_MONEY, step: 1 %><br />
-
-    <%= f.label :human_players %>:
-    <%= f.number_field :pc_count, in: Setting::MIN_TOTAL_PLAYERS..Setting::MAX_TOTAL_PLAYERS, step: 1 %><br />
-
-    <%= f.label :total_players %>:
-    <%= f.number_field :total_players, in: Setting::MIN_TOTAL_PLAYERS..Setting::MAX_TOTAL_PLAYERS, step: 1 %><br />
-
-    <%= f.label :deck_count %>:
-    <%= f.number_field :deck_count, in: Setting::MIN_DECK_COUNT..Setting::MAX_DECK_COUNT, step: 1 %><br />
-
-    <%= f.submit %><br />
-<% end %>
-
-<%= button_to "Back", "/", method: :get %>
+<%= javascript_include_tag 'fade_element_and_delete' %>

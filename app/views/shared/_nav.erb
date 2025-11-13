@@ -1,0 +1,12 @@
+<div class='nav_wrapper'>
+    <% unless current_page?(root_path) %>
+        <div class='nav_back_wrapper'>
+            <div class='nav_back_inner_wrapper'>
+                <%= link_to "Back", root_path, class: "nav_back", method: :get %>
+            </div>
+        </div>
+    <% end %>
+    <div class='title_card'>
+        <h1><%=title%></h1>
+    </div>
+</div>

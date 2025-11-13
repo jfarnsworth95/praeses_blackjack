@@ -1,3 +1,10 @@
-<h1>Main Menu</h1>
-<h3><%= link_to "Start Game", "/game" %></h3>
-<h3><%= link_to "Settings", "/settings" %></h3>
+<%= render partial: "shared/nav", locals: {title: "Main Menu"} %>
+<div class="menu_options_body">
+    <div class='menu_options_container'>
+        <% if @active_session %>
+            <h3 class='menu_option'><%= link_to "Continue Game", "/bet", class: "menu_option_link" %></h3>
+        <% end %>
+        <h3 class='menu_option'><%= link_to "Start Game", "/game", class: "menu_option_link" %></h3>
+        <h3 class='menu_option'><%= link_to "Settings", "/settings", class: "menu_option_link" %></h3>
+    </div>
+</div>

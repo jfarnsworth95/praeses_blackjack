@@ -1,5 +1,5 @@
-<h1>BETTING</h1>
-<%= render "info_screen" %>
+<%= render partial: "shared/nav", locals: {title: "Betting"} %>
+<%= render partial: "info_screen" %>
 
 <h2><%= @current_player.name %> 's Turn</h2>
 <%= form_for @current_player, method: :post, url: :submit_bet do |f| %>

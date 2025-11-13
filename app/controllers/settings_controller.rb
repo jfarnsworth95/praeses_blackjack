@@ -10,7 +10,7 @@ class SettingsController < ApplicationController
 
         # Ensure default path for Settings isn't abused
         if @settings.session_id != session[:session_id]
-            flash[:settings_error] = "Please don't edit other people's settings."
+            flash[:settings_resp] = "Please don't edit other people's settings."
             redirect_to action: "index"
             return
         end
@@ -21,6 +21,9 @@ class SettingsController < ApplicationController
         @settings.update_total_players(form_data[:pc_count].to_i > form_data[:total_players].to_i ? form_data[:pc_count].to_i : form_data[:total_players].to_i)
         @settings.update_deck_count(form_data[:deck_count].to_i)
         @settings.save!
+
+        
+        flash[:settings_resp] = "Changes saved!"
 
         redirect_to action: "index"
     end
