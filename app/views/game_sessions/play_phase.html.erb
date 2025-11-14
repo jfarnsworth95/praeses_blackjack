@@ -25,7 +25,7 @@
             <%= button_to "Stand", {controller: "game_sessions", action: "play", request: GameSessionsController::REQUEST_STAND, on_split: @game_session.on_player_split }, class: "casino_btn", method: :post %>
         </div>
     </div>
-    <% if not @current_player.has_bust? %>
+    <% if not @current_player.has_bust?(@game_session.on_player_split) %>
         <div class='casino_btn_wrapper'>
             <div class='casino_btn_inner_wrapper'>
                 <%= button_to "Hit", {controller: "game_sessions", action: "play", request: GameSessionsController::REQUEST_HIT, on_split: @game_session.on_player_split }, class: "casino_btn", method: :post %>

@@ -46,8 +46,10 @@ class Player < ApplicationRecord
 
   # No gain, no loss
   def stand_off!
-    self.money += self.current_bet
+    winnings = self.current_bet
+    self.money += winnings
     self.save!
+    winnings
   end
 
   # Adds side bet for Insurance phase
@@ -111,7 +113,7 @@ class Player < ApplicationRecord
   # Checks if a player can double down (only possible if cards value 9, 10, or 11)
   def can_double_down?
     hand = Card.where(player: self)
-    hand.count == 2 and ([9, 10, 11].include?(self.best_value)) and self.can_bet?(self.current_bet * 3)
+    hand.count == 2 and ([9, 10, 11].include?(self.best_value)) and self.can_bet?(self.current_bet * 4)
   end
 
   # Check if a player can split (same symbol on both cards)

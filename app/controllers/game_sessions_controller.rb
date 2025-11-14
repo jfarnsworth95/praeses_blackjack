@@ -354,13 +354,25 @@ class GameSessionsController < ApplicationController
     dealer = @game_session.get_dealer
     @players.each do |player|
       if player.is_split
-        @winnings[player.id] = @game_session.did_player_win?(dealer, player, false) ? player.split_win! : 0
-        @winnings[player.id] += @game_session.did_player_win?(dealer, player, true) ? player.split_win! : 0
+        @winnings[player.id] = resolve_win_conditions(player, dealer, :split_win!, false)
+        @winnings[player.id] += resolve_win_conditions(player, dealer, :split_win!, true)
       elsif @game_session.did_player_win?(dealer, player)
-        @winnings[player.id] = player.standard_win!
+        @winnings[player.id] = resolve_win_conditions(player, dealer, :standard_win!, false)
       end
     end
   end
+
+  def resolve_win_conditions(player, dealer, win_method, split = false)
+    dealer_value = dealer.best_value
+    if player.best_value(split) == dealer_value and !player.has_bust?
+      player.stand_off!
+    elsif @game_session.did_player_win?(dealer, player, split)
+      player.method(win_method).call
+    else
+      0
+    end
+  end
+
 
 
 end
