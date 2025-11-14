@@ -33,7 +33,7 @@ class GameSessionsController < ApplicationController
     @players = @game_session.player.order(:order)
     @current_player = @players.where(order: @game_session.player_turn).first
     @cards = Card.where(game_session: @game_session).where.not(player: nil).order(:updated_at => :asc)
-    @last_bet = session[@current_player.name] || 1
+    @last_bet = [(session[@current_player.name] || 1), @current_player.money].min
   end
 
   # Ensure an API call can't be used to skip around
