@@ -1,13 +1,37 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  session_id: MyString
-  player_turn: 1
+  session_id: betting_phase_session
+  player_turn: 0
   on_player_split: false
   phase: 0
 
 two:
-  session_id: MyString
-  player_turn: 1
+  session_id: insurance_phase_session
+  player_turn: 0
   on_player_split: false
   phase: 1
+
+three:
+  session_id: play_phase_session
+  player_turn: 0
+  on_player_split: false
+  phase: 2
+
+four:
+  session_id: resolve_phase_session
+  player_turn: 0
+  on_player_split: false
+  phase: 3
+
+five:
+  session_id: game_over_phase_session
+  player_turn: 0
+  on_player_split: false
+  phase: 4
+
+six:
+  session_id: player_out_session
+  player_turn: 0
+  on_player_split: false
+  phase: 0

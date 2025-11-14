@@ -4,16 +4,16 @@ Rails.application.routes.draw do
   get "/settings", to: "settings#index"
   resources :settings
 
-  get "/game", to: "game_sessions#start_game"
-  get "/bet", to: "game_sessions#betting_phase"
+  get "/game", to: "game_sessions#start_game", as: :start_game
+  get "/bet", to: "game_sessions#betting_phase", as: :betting_phase
   post "/submit_bet", to: "game_sessions#submit_bet", as: :submit_bet
-  get "/insurance", to: "game_sessions#insurance_phase"
+  get "/insurance", to: "game_sessions#insurance_phase", as: :insurance_phase
   post "game_sessions/insurance_response", to: "game_sessions#insurance_response"
-  get "/play", to: "game_sessions#play_phase"
+  get "/play", to: "game_sessions#play_phase", as: :play_phase
   post "game_sessions/play", to: "game_sessions#play"
-  get "/resolve", to: "game_sessions#resolve_phase"
+  get "/resolve", to: "game_sessions#resolve_phase", as: :resolve_phase
   post "game_sessions/next_round", to: "game_sessions#next_round"
-  get "/game_over", to: "game_sessions#all_pc_bankrupt_phase"
+  get "/game_over", to: "game_sessions#all_pc_bankrupt_phase", as: :all_pc_bankrupt_phase
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

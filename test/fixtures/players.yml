@@ -1,6 +1,6 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
+bob_1:
   game_session: one
   money: 1000
   current_bet: 0
@@ -12,13 +12,97 @@ one:
   is_split: false
   is_ai: false
 
-two:
+phil_1:
+  game_session: one
+  money: 1000
+  current_bet: 0
+  side_bet: 0
+  name: Phil
+  order: 1
+  insurance: false
+  double_down: false
+  is_split: false
+  is_ai: true
+
+jack_1:
+  game_session: one
+  money: 1000
+  current_bet: 0
+  side_bet: 0
+  name: Jack
+  order: 2
+  insurance: false
+  double_down: false
+  is_split: false
+  is_ai: true
+
+tara_1:
+  game_session: one
+  money: 1000
+  current_bet: 0
+  side_bet: 0
+  name: Tara
+  order: 2
+  insurance: false
+  double_down: false
+  is_split: false
+  is_ai: true
+
+claire_1:
+  game_session: one
+  money: 1000
+  current_bet: 0
+  side_bet: 0
+  name: Claire
+  order: 2
+  insurance: false
+  double_down: false
+  is_split: false
+  is_ai: true
+
+bob_2:
+  game_session: two
+  money: 1000
+  current_bet: 0
+  side_bet: 0
+  name: Bob
+  order: 0
+  insurance: false
+  double_down: false
+  is_split: false
+  is_ai: false
+
+phil_2:
   game_session: two
   money: 1000
   current_bet: 0
   side_bet: 0
   name: Phil
   order: 1
+  insurance: false
+  double_down: false
+  is_split: false
+  is_ai: true
+
+bob_3:
+  game_session: three
+  money: 1000
+  current_bet: 0
+  side_bet: 0
+  name: Bob
+  order: 0
+  insurance: false
+  double_down: false
+  is_split: false
+  is_ai: false
+
+out_player:
+  game_session: six
+  money: 0
+  current_bet: 0
+  side_bet: 0
+  name: Some Guy
+  order: 0
   insurance: false
   double_down: false
   is_split: false

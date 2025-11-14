@@ -1,24 +1,143 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
+sk_1:
   game_session: one
-  player: one
+  player: bob_1
   is_split: false
   in_discard: false
-  in_deck: true
+  in_deck: false
   is_face_down: false
-  symbol: A
+  symbol: K
   suite: S
-  value: 11
+  value: 10
 
-two:
+s7_2:
   game_session: two
-  player: two
+  player: phil_2
   is_split: false
   in_discard: false
-  in_deck: true
+  in_deck: false
+  is_face_down: false
+  symbol: 7
+  suite: S
+  value: 7
+
+sq_2:
+  game_session: two
+  player: bob_2
+  is_split: false
+  in_discard: false
+  in_deck: false
+  is_face_down: false
+  symbol: Q
+  suite: S
+  value: 10
+
+h5_1:
+  game_session: one
+  player: phil_1
+  is_split: false
+  in_discard: false
+  in_deck: false
+  is_face_down: false
+  symbol: 5
+  suite: H
+  value: 5
+
+s2_1:
+  game_session: one
+  player: jack_1
+  is_split: false
+  in_discard: false
+  in_deck: false
   is_face_down: false
   symbol: 2
   suite: S
   value: 2
-  
+
+s3_1:
+  game_session: one
+  player: jack_1
+  is_split: false
+  in_discard: false
+  in_deck: false
+  is_face_down: false
+  symbol: 3
+  suite: S
+  value: 3
+
+sq_1:
+  game_session: one
+  player: claire_1
+  is_split: false
+  in_discard: false
+  in_deck: false
+  is_face_down: true
+  symbol: Q
+  suite: S
+  value: 10
+
+ha_1:
+  game_session: one
+  player: claire_1
+  is_split: false
+  in_discard: false
+  in_deck: false
+  is_face_down: false
+  symbol: A
+  suite: H
+  value: 11
+
+c4_1:
+  game_session: one
+  player: tara_1
+  is_split: false
+  in_discard: false
+  in_deck: false
+  is_face_down: false
+  symbol: 4
+  suite: C
+  value: 4
+
+ck_2:
+  game_session: two
+  player: phil_2
+  is_split: false
+  in_discard: false
+  in_deck: false
+  is_face_down: false
+  symbol: K
+  suite: C
+  value: 10
+
+c7_2:
+  game_session: two
+  player: bob_2
+  is_split: false
+  in_discard: false
+  in_deck: false
+  is_face_down: true
+  symbol: 7
+  suite: C
+  value: 7
+
+c2_1:
+  game_session: one
+  player: phil_1
+  is_split: false
+  in_discard: false
+  in_deck: false
+  is_face_down: false
+  symbol: 2
+  suite: C
+  value: 2
+
+c9_1:
+  game_session: one
+  player: bob_1
+  is_split: false
+  in_discard: false
+  in_deck: false
+  is_face_down: false
+  symbol: 9
+  suite: C
+  value: 9
