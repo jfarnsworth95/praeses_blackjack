@@ -113,8 +113,8 @@ class GameSession < ApplicationRecord
         !player.has_bust?(split) and (player.best_value(split) > dealer_total or dealer.has_bust?)
     end
 
-    def are_all_humans_bankrupt?
-        Player.where(game_session: self, is_ai: false).all? { |player| player.is_player_bankrupt? }
+    def are_all_humans_out?
+        Player.where(game_session: self, is_ai: false).all? { |player| player.is_player_out? }
     end
 
     def reset_for_new_round!

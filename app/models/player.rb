@@ -135,8 +135,8 @@ class Player < ApplicationRecord
     return values.sum
   end
 
-  def is_player_bankrupt?
-    self.money <= 0
+  def is_player_out?
+    self.money <= 0 and self.current_bet <= 0 and self.side_bet <= 0
   end
 
 end
