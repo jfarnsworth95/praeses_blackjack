@@ -9,6 +9,7 @@ class GameSession < ApplicationRecord
     PHASE_RESOLVE = 3
     PHASE_ALL_PC_BANKRUPT = 4
 
+    # Setup the current game (Create GameSession, Players, and Cards)
     def self.create_game(session_id)
         GameSession.transaction do
             # Start Game Session
@@ -31,12 +32,14 @@ class GameSession < ApplicationRecord
         @game_session
     end
 
+    # Create Human Players (labeled 'Player [0-9]')
     def self.create_pcs(total_pcs)
         total_pcs.times do |x|
             Player.create(:game_session => @game_session, :money => @settings.starting_money, :name => "Player #{x + 1}", :order => x, :is_ai => false)
         end
     end
 
+    # Create AI Players (Names from hardcoded list)
     def self.create_ai(total_players, total_pcs)
         total_ai = total_players - total_pcs
         total_ai.times do |x|
@@ -71,6 +74,7 @@ class GameSession < ApplicationRecord
         dealt_cards.each(&:save)
     end
 
+    # 'Shuffles' the deck. Just updates cards that are 'in_discard' to be 'in_deck'
     def shuffle_deck!
         discard_pile = Card.where(game_session: self, in_discard: true)
         discard_pile.update_all(in_deck: true, in_discard: false)
@@ -92,31 +96,37 @@ class GameSession < ApplicationRecord
         Card.where(player: dealer_player, is_face_down: false).first.symbol == "A"
     end
 
+    # Get the Dealer Player model for this session
     def get_dealer
         self.player.order(order: :desc).first
     end
 
+    # Update phase and reset player_turn
     def set_phase!(phase_id)
         self.player_turn = 0
         self.phase = phase_id
         self.save!
     end
 
+    # Advance the player turn, reset split condition
     def next_player_turn!
         self.player_turn += 1
         self.on_player_split = false
         self.save!
     end
 
+    # Validate if player did not Bust, and either exceed the dealer or the dealer Bust
     def did_player_win?(dealer, player, split=false)
         dealer_total = dealer.best_value
         !player.has_bust?(split) and (player.best_value(split) > dealer_total or dealer.has_bust?)
     end
 
+    # See if all players are out of money with no active bets
     def are_all_humans_out?
         Player.where(game_session: self, is_ai: false).all? { |player| player.is_player_out? }
     end
 
+    # Have each player reset round vars, move all player cards to discard, move phase to Betting
     def reset_for_new_round!
         self.player.each(&:round_reset!)
         self.discard_dealt_cards!

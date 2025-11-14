@@ -1,9 +1,11 @@
 class SettingsController < ApplicationController
 
+    # Load the settings model
     def index
         @settings = Setting.where(session_id: session[:session_id]).first_or_create
     end
 
+    # Allows user to update, but verifies values are in hard coded thresholds
     def update
         @settings = Setting.find(params[:id])
         form_data = params[:setting]
@@ -22,7 +24,7 @@ class SettingsController < ApplicationController
         @settings.update_deck_count(form_data[:deck_count].to_i)
         @settings.save!
 
-        
+        # User feedback on submit
         flash[:settings_resp] = "Changes saved!"
 
         redirect_to action: "index"

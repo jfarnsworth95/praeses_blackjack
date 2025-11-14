@@ -20,6 +20,7 @@ class GameSessionsController < ApplicationController
     GameSession.where(session_id: session[:session_id]).destroy_all
   end
 
+  # If we navigate to a game phase, but there is no session, redirect to Main Menu
   def check_game_running
     @game_session = GameSession.find_by(session_id: session[:session_id])
     if @game_session == nil
@@ -64,6 +65,8 @@ class GameSessionsController < ApplicationController
     redirect_to action: "betting_phase"
   end
 
+  # Starting point for Betting Phase
+  # Runs AI on their own, stops Out players from playing
   def betting_phase
     if @current_player.is_player_out?
       @game_session.next_player_turn!
@@ -76,6 +79,7 @@ class GameSessionsController < ApplicationController
     end
   end
 
+  # Called when players make their bet
   def submit_bet
     bet = params[:player][:current_bet].to_i
     # Verify player can afford bet
@@ -95,6 +99,7 @@ class GameSessionsController < ApplicationController
     end
   end
 
+  # If the dealers shown card is an Ace, this optional phase starts
   def insurance_phase
     if @current_player.is_ai
 
@@ -110,7 +115,7 @@ class GameSessionsController < ApplicationController
         return
       end
 
-      # Normal AI Turn
+      # Normal AI Turn, random selection if they can make the side bet
       if @current_player.can_side_bet?
         rand(2) == 0 ? @current_player.side_bet! : nil
         @game_session.next_player_turn!
@@ -119,6 +124,7 @@ class GameSessionsController < ApplicationController
     end
   end
 
+  # Yes/No for human player adding side bet
   def insurance_response
     if ActiveModel::Type::Boolean.new.cast(params[:use_insurance]) and @current_player.can_side_bet?
       @current_player.side_bet!
@@ -127,6 +133,7 @@ class GameSessionsController < ApplicationController
     redirect_to action: "insurance_phase"
   end
 
+  # Start point for play phase
   def play_phase
     # All AI will act like the dealer, they will never attempt to double down or split
     if @current_player.is_player_out?
@@ -138,6 +145,7 @@ class GameSessionsController < ApplicationController
 
   end
 
+  # Process the human player action during play
   def play
     request = params[:request].to_i
 
@@ -156,7 +164,9 @@ class GameSessionsController < ApplicationController
 
   end
 
+  # Start point for the resolve phase
   def resolve_phase
+    # winnings will keep track of money earned, to display on the view
     @winnings = {}
 
     cause = params[:cause].to_i
@@ -172,6 +182,7 @@ class GameSessionsController < ApplicationController
     end
   end
 
+  # Reset round, and check if all human players are out
   def next_round
     @game_session.reset_for_new_round!
     
@@ -183,11 +194,13 @@ class GameSessionsController < ApplicationController
     end
   end
 
+  # Place holder for final phase, active when all humans are out of money
   def all_pc_bankrupt_phase
   end
 
   private 
 
+  # AI bet, a random value between 1 and the minimum of 500 & the AI's money
   def ai_bet
     if @current_player.order == @players.pluck(:order).max
       # If dealer, deal cards
@@ -200,6 +213,7 @@ class GameSessionsController < ApplicationController
     redirect_to action: "betting_phase"
   end
 
+  # Deals cards right after the Betting Phase
   def deal_cards
     # Deal each player 2 cards, have dealer's (last player) first card face down
     @players[0..-2].each do |player|
@@ -227,6 +241,7 @@ class GameSessionsController < ApplicationController
     end
   end
 
+  # AI Hit if below 17, and Stand at or above 17
   def ai_play
     while @current_player.best_value < 17
       @game_session.draw_card!(@current_player)
@@ -241,6 +256,7 @@ class GameSessionsController < ApplicationController
     return
   end
 
+  # Process human player requested HIT
   def user_req_hit
     @game_session.draw_card!(@current_player, @game_session.on_player_split)
     if @current_player.has_bust?(@game_session.on_player_split)
@@ -254,6 +270,7 @@ class GameSessionsController < ApplicationController
     redirect_to action: "play_phase"
   end
 
+  # Process human player requested STAND
   def user_req_stand
     if !@game_session.on_player_split and @current_player.is_split
       @game_session.on_player_split = true
@@ -264,6 +281,7 @@ class GameSessionsController < ApplicationController
     redirect_to action: "play_phase"
   end
 
+  # Process human player requested DOUBLE DOWN
   def user_req_double_down
     if @current_player.can_double_down?
       @current_player.double_down!
@@ -275,6 +293,7 @@ class GameSessionsController < ApplicationController
     redirect_to action: "play_phase"
   end
 
+  # Process human player requested SPLIT
   def user_req_split
     if @current_player.can_split?
       @current_player.split!
@@ -284,6 +303,7 @@ class GameSessionsController < ApplicationController
     redirect_to action: "play_phase"
   end
 
+  # Process human player requested DOUBLE DOWN & SPLIT
   def user_req_double_down_and_split
     if @current_player.can_double_down_and_split?
       @current_player.double_down_and_split!
@@ -296,6 +316,7 @@ class GameSessionsController < ApplicationController
     redirect_to action: "play_phase"
   end
 
+  # What to do if the Insurance phase immediately resolved due to Dealer Natural
   def resolve_insurance_nat
     # First response to other natural winners
     @game_session.players_with_natural.each do |player|
@@ -315,6 +336,7 @@ class GameSessionsController < ApplicationController
     end
   end
 
+  # What to do if one or more players have a Natural
   def resolve_nats
     dealer = @game_session.get_dealer
     natural_winners = @game_session.players_with_natural
@@ -327,6 +349,7 @@ class GameSessionsController < ApplicationController
     end
   end
 
+  # What to do if no special cases causing immediate Resolution occurs
   def resolve_standard
     dealer = @game_session.get_dealer
     @players.each do |player|
