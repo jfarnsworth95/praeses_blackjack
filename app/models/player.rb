@@ -93,7 +93,8 @@ class Player < ApplicationRecord
     self.insurance = false
     self.double_down = false
     self.is_split = false
-    self.current_bet = false
+    self.current_bet = 0
+    self.side_bet = 0
     self.save!
   end
 
