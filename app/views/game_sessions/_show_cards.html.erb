@@ -1,13 +1,13 @@
 <% if @cards.where(player: player).count > 0 %>
     <div class="player_card_channel">
-    <% @cards.where(player: player, is_split: false).each do |card| %>
-        <%= render partial: "card", locals: {card: card} %>
+    <% @cards.where(player: player, is_split: false).each_with_index do |card, i| %>
+        <%= render partial: "card", locals: {card: card, first: i == 0} %>
     <% end %>
     </div>
     <% if player.is_split %>
         <div class="player_card_channel">
-        <% @cards.where(player: player, is_split: true).each do |card| %>
-            <%= render partial: "card", locals: {card: card} %>
+        <% @cards.where(player: player, is_split: true).each_with_index do |card, i| %>
+            <%= render partial: "card", locals: {card: card, first: i == 0} %>
         <% end %>
         </div>
     <% end %>

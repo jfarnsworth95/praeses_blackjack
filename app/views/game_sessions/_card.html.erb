@@ -2,5 +2,5 @@
 <% if (card.is_face_down and [GameSession::PHASE_PLAY, GameSession::PHASE_INSURANCE].include?(@game_session.phase)) %>
     <div class='card card-back'></div>
 <% else %>
-    <div class='card card-<%= "#{card.suite.downcase}#{card.symbol.downcase}" %>'></div>
+    <div class='card card-<%= "#{card.suite.downcase}#{card.symbol.downcase}" %><% unless first %><%= " card-offset" %><% end %>'></div>
 <% end %>

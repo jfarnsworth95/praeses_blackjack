@@ -6,6 +6,10 @@
     background-repeat: no-repeat;
 }
 
+.card-offset {
+    margin-left: -65px;
+}
+
 .card-back {
   background-image: url('cards/back.png');
 }
