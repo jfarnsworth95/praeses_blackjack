@@ -1,8 +1,8 @@
 require "test_helper"
 
 class GameSessionsControllerTest < ActionDispatch::IntegrationTest
-  test "should get index" do
-    get game_sessions_index_url
-    assert_response :success
+  test "should get start_game" do
+    get "/game"
+    assert_response :redirect
   end
 end
