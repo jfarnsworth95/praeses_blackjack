@@ -65,7 +65,7 @@ class GameSessionsController < ApplicationController
   end
 
   def betting_phase
-    if @current_player.money <= 0
+    if @current_player.is_player_bankrupt?
       @game_session.next_player_turn!
       redirect_to action: "betting_phase"
       return
@@ -130,6 +130,11 @@ class GameSessionsController < ApplicationController
   def play_phase
     # All AI will act like the dealer, they will never attempt to double down or split
     if @current_player.is_ai
+      if @current_player.is_player_bankrupt?
+        @game_session.next_player_turn!
+        redirect_to action: "play_phase"
+        return
+      end
       self.ai_play
     end
   end
@@ -198,6 +203,9 @@ class GameSessionsController < ApplicationController
   def deal_cards
     # Deal each player 2 cards, have dealer's (last player) first card face down
     @players[0..-2].each do |player|
+      if player.is_player_bankrupt?
+        next
+      end
       @game_session.draw_card!(player)
       @game_session.draw_card!(player)
     end
