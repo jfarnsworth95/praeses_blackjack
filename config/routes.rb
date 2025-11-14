@@ -24,7 +24,7 @@ Rails.application.routes.draw do
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
   # Defines the root path route ("/")
-  get "/", to: "main_menu#index"
+  get "/", to: "main_menu#index", as: :main_menu
   root "main_menu#index"
 
 end
