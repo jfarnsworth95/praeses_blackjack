@@ -3,7 +3,11 @@
 one:
   session_id: MyString
   player_turn: 1
+  on_player_split: false
+  phase: 0
 
 two:
   session_id: MyString
   player_turn: 1
+  on_player_split: false
+  phase: 1

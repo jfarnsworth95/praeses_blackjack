@@ -2,14 +2,14 @@
 
 one:
   session_id: MyString
-  starting_money: 1
+  starting_money: 1000
   pc_count: 1
   total_players: 1
   deck_count: 1
 
 two:
   session_id: MyString
-  starting_money: 1
-  pc_count: 1
-  total_players: 1
-  deck_count: 1
+  starting_money: 10000
+  pc_count: 2
+  total_players: 6
+  deck_count: 3

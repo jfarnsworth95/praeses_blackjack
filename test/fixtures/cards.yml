@@ -5,17 +5,20 @@ one:
   player: one
   is_split: false
   in_discard: false
-  in_deck: false
-  is_ace: false
-  card_symbol: MyString
-  value: 1
+  in_deck: true
+  is_face_down: false
+  symbol: A
+  suite: S
+  value: 11
 
 two:
   game_session: two
   player: two
   is_split: false
   in_discard: false
-  in_deck: false
-  is_ace: false
-  card_symbol: MyString
-  value: 1
+  in_deck: true
+  is_face_down: false
+  symbol: 2
+  suite: S
+  value: 2
+  

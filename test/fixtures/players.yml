@@ -1,21 +1,25 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  gamesession: one
-  money: 1
-  current_bet: 1
-  name: MyString
-  order: 1
+  game_session: one
+  money: 1000
+  current_bet: 0
+  side_bet: 0
+  name: Bob
+  order: 0
   insurance: false
   double_down: false
+  is_split: false
   is_ai: false
 
 two:
-  gamesession: two
-  money: 1
-  current_bet: 1
-  name: MyString
+  game_session: two
+  money: 1000
+  current_bet: 0
+  side_bet: 0
+  name: Phil
   order: 1
   insurance: false
   double_down: false
-  is_ai: false
+  is_split: false
+  is_ai: true
